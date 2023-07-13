@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="/">Strona główna</a></li>
+                <li><a href="/sets">Zestawy</a></li>
+                <li><a href="/wishlist">Lista życzeń</a></li>
+                <li><a href="/bricks">Klocki</a></li>
+                <li><a href="/minifigures">Minifigurki</a></li>
+            </ul>
+        </nav>
+        {% block body %}{% endblock %}
+    </body>
+</html>

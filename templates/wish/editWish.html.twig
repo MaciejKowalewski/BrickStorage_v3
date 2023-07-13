@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ wish.SetId }} - {{ wish.Name }}{% endblock %}
+
+{% block body %}
+
+<a href="/wishlist">Powrót do listy życzeń!</a>
+
+{{form_start(form)}}
+{{form_end(form)}}
+
+<br>
+<br>
+<br>
+<a href="delete/{{ wish.id }}">Delete</a>
+
+{% endblock %}

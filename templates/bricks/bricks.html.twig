@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Klocki{% endblock %}
+
+{% block body %}
+
+{{ dump() }}
+
+    {% for Brick in Bricks %}
+        <div class="brick">
+            {#<img src="{{Brick.ImagePath}}" alt="{{Brick.BrickId}}">
+            <h4>{{Brick.BrickId}}</h4>
+            <h4>{{Brick.Name}}</h4>
+            <h4>{{Brick.BrickType}}, {{Brick.Color}}</h4>
+            <h5>ilość: {{Brick.Quantity}}</h4>#}
+            <a href="/brick/{{ Brick.id }}">Edytuj</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

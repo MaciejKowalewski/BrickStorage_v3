@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Lista życzeń{% endblock %}
+{% block body %}
+    <a href="/newwish">Dodaj zestaw do listy życzeń!</a>
+    {{form_start(form)}}
+    {{form_end(form)}}
+    <div>Znaleziono: 
+        {% if Wishlist|length == 1 %}
+            1 zestaw.
+        {% elseif Wishlist|length|last == 2 or Wishlist|length|last == 3 or Wishlist|length|last == 4 %}
+            {{ Wishlist|length }} zestawy.
+        {% else %}
+            {{ Wishlist|length }} zestawów.
+        {% endif %}
+    </div>
+    {% include 'wish/paginator.html.twig' %}
+    {% for Wish in Wishlist %}
+        <div class="brick" style="border: thin solid black">
+            <h3>{{Wish.SetId}}</h3>
+            <img src="{{Wish.ImagePath}}" alt="{{Wish.SetId}}" width="200">
+            <h4>{{Wish.Name}}</h4>
+            <h4><a href="{{Wish.PromoklockiSRC}}">KUP!</a></h4>
+            <h5>EOL: {{Wish.EolYear}}</h4>
+            <a href="/wish/{{ Wish.id }}">Edytuj</a>
+        </div>
+    {% endfor %}
+    
+    {% include 'wish/paginator.html.twig' %}
+
+{% endblock %}

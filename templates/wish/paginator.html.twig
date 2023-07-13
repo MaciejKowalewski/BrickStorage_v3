@@ -1,0 +1,21 @@
+{% for pagenum in 0..((Wishlist|length)/PagiantorPerPage)|round(0, 'ceil')-1 %}
+        {% if pagenum == page %}
+            <div class="unactive">
+                {{page+1}}
+            </div>
+        {% elseif pagenum <Wishlist|length %}
+            {% if 'page=' in app.request.requesturi %}
+                <div class="active">
+                    <a href="{{ app.request.requesturi|split('page=')|first ~ 'page=' ~ pagenum }}">{{pagenum+1}}</a>
+                </div>
+            {% elseif '?' in app.request.requesturi %}
+                <div class="active">
+                    <a href="{{ app.request.requesturi ~ '&page=' ~ pagenum }}">{{pagenum+1}}</a>
+                </div>
+            {% else %}
+                <div class="active">
+                    <a href="{{ app.request.requesturi ~ '?page=' ~ pagenum }}">{{pagenum+1}}</a>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
