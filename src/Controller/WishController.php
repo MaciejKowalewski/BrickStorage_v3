@@ -68,19 +68,12 @@ class WishController extends AbstractController
     {
         $wish = $this->wishRepository->find($id);
         $form = $this->createForm(AddWishType::class, $wish);
-
         $form->handleRequest($request);  
 
          if ($form->isSubmitted() and $form->isValid()) {
-           $wish->setSetId($form->get('SetId')->getData());
-           $wish->setName($form->get('Name')->getData());
-           $wish->setImagePath($form->get('ImagePath')->getData());
-           $wish->setPromoklockiSRC($form->get('PromoklockiSRC')->getData());
-           $wish->setEolYear($form->get('EolYear')->getData());
-
-           $this->entityManagerInterface->flush();
-           $routeName = $request->attributes->get('_route');
-           return $this->redirectToRoute($routeName, ['id'=>$id]);
+            $this->wishlistProvider->edit($id, $wish, $form);
+            $routeName = $request->attributes->get('_route');
+            return $this->redirectToRoute($routeName, ['id'=>$id]);
          }
 
         return $this->render('wish/editWish.html.twig', [
@@ -92,9 +85,7 @@ class WishController extends AbstractController
     #[Route('/wish/delete/{id}', name: 'delete_wish')]
     public function delete($id): Response
     {
-        $wish = $this->wishRepository->find($id);
-        $this->entityManagerInterface->remove($wish);
-        $this->entityManagerInterface->flush();
+        $this->wishlistProvider->delete($id);
         return $this->redirectToRoute('wishlist');
     }
 

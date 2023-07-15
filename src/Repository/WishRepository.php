@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Wish;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Service\WishlistProvider;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
