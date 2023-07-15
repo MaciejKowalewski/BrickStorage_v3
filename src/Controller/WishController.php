@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Controller;
-
 use App\Form\AddWishType;
 use App\Entity\Wish;
-use App\Form\WishlistPaginator;
 use App\Repository\WishRepository;
 use App\Service\WishlistProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\WishlistPaginator;
 
 class WishController extends AbstractController
 {
@@ -26,20 +25,12 @@ class WishController extends AbstractController
     public function index(Request $request): Response
     {
         $form = $this->createForm(WishlistPaginator::class);
-        $form->handleRequest($request);
-        $page = $request->query->getInt('page', 0);
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $search = $request->query->all()['wishlist_paginator']['search'];
-            $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
-            $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, WishRepository::PAGINATOR_PER_PAGE*$page);
-        }else{
-            $wishlist = $this->wishRepository->paginateWishes('','SetId_ASC', WishRepository::PAGINATOR_PER_PAGE*$page);
-        }
+        $transformedDAta = $this->wishlistProvider->transformDataForTwig($request, $form);
         
         return $this->render('wish/index.html.twig', [
-            'Wishlist' => $wishlist,
+            'Wishlist' => $transformedDAta['wishlist'],
             'form' => $form,
-            'page' => $page,
+            'page' => $transformedDAta['page'],
             'PagiantorPerPage' => WishRepository::PAGINATOR_PER_PAGE,
         ]);
     }
@@ -50,16 +41,19 @@ class WishController extends AbstractController
         $wish = new Wish;
         $form = $this->createForm(AddWishType::class, $wish);
         $form->handleRequest($request);  
+        $message = '';
 
          if ($form->isSubmitted() and $form->isValid()) {
-           $newWish = $form->getData();
-           $this->entityManagerInterface->persist($newWish);
-           $this->entityManagerInterface->flush();
-           return $this->redirectToRoute('wishlist');
+            if($this->wishlistProvider->add($form)[0]){
+                $this->wishlistProvider->add($form);
+                return $this->redirectToRoute('wishlist');
+            }else{
+                $message = $this->wishlistProvider->add($form)[1];
+            }
          }
-
         return $this->render('wish/addWish.html.twig', [
             'form' => $form,
+            'message' => $message,
         ]);
     }
 

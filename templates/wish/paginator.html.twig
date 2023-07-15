@@ -3,7 +3,7 @@
             <div class="unactive">
                 {{page+1}}
             </div>
-        {% elseif pagenum <Wishlist|length %}
+        {% elseif pagenum <Wishlist|length and Wishlist|length > 0 %}
             {% if 'page=' in app.request.requesturi %}
                 <div class="active">
                     <a href="{{ app.request.requesturi|split('page=')|first ~ 'page=' ~ pagenum }}">{{pagenum+1}}</a>
