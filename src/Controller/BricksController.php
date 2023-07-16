@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Brick;
 use App\Repository\BrickRepository;
 use App\Service\BricksProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,7 @@ class BricksController extends AbstractController
     )
     {}
 
-    #[Route('/bricks', name: 'show_bricks')]
+    #[Route('/bricks', name: 'bricks')]
     public function index(Request $request): Response
     {
         $form = $this->createForm(BricksPaginator::class);
@@ -49,6 +50,29 @@ class BricksController extends AbstractController
         return $this->render('bricks/editBrick.html.twig', [
             'brick' => $brick,
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/brick/delete/{id}', name: 'delete_brick')]
+    public function delete($id): Response
+    {
+        $this->bricksProvider->delete($id);
+        return $this->redirectToRoute('bricks');
+    }
+
+    #[Route('/newbrick', name: 'add_newbrick')]
+    public function add(Request $request): Response
+    {
+        $wish = new Brick;
+        $form = $this->createForm(AddBrickType::class, $wish);
+        $form->handleRequest($request);  
+
+         if ($form->isSubmitted() and $form->isValid()) {
+            $this->bricksProvider->add($form);
+            return $this->redirectToRoute('bricks');
+         }
+        return $this->render('bricks/addBrick.html.twig', [
+            'form' => $form,
         ]);
     }
 }

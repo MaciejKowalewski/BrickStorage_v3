@@ -28,12 +28,12 @@ class WishlistProvider{
 
     private function isInDatabase($newWish): Bool{
         $isSet = $this->wishRepository->findBy(['SetId' => $newWish->getSetId()]);
-        return empty($isSet);
+        return !empty($isSet);
     }
 
     public function add($form): array{
         $newWish = $form->getData();
-        if($this->isInDatabase($newWish)){
+        if(!$this->isInDatabase($newWish)){
             $this->entityManagerInterface->persist($newWish);
             $this->entityManagerInterface->flush();
             return [1];

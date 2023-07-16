@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Form\AddWishType;
 use App\Entity\Wish;
 use App\Repository\WishRepository;
@@ -27,7 +28,7 @@ class WishController extends AbstractController
         $form = $this->createForm(WishlistPaginator::class);
         $transformedDAta = $this->wishlistProvider->transformDataForTwig($request, $form);
         
-        return $this->render('wish/index.html.twig', [
+        return $this->render('wish/wishlist.html.twig', [
             'Wishlist' => $transformedDAta['wishlist'],
             'form' => $form,
             'page' => $transformedDAta['page'],

@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Service;
+
+use App\Entity\Brick;
 use App\Repository\BrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -34,5 +36,40 @@ class BricksProvider{
         $brick->setColor($form->get('Color')->getData());
         $brick->setPartType($form->get('PartType')->getData());
         $this->entityManagerInterface->flush();
+    }
+
+    public function delete(string $id): void{
+        $brick = $this->BrickRepository->find($id);
+        $this->entityManagerInterface->remove($brick);
+        $this->entityManagerInterface->flush();
+    }
+
+    private function isInDatabase($newBrick): Bool{
+        $isBrick = $this->BrickRepository->findBy(
+            ['BrickId' => $newBrick->getBrickId(),
+            'Color' => $newBrick->getColor()]
+            );
+        return !empty($isBrick);
+    }
+
+    private function editBricksQuantity($newBrick, $form){
+        $BrickId = $this->BrickRepository->findOneBy(
+            ['BrickId' => $newBrick->getBrickId(),
+            'Color' => $newBrick->getColor()]
+            );
+        $BrickId->setQuantity(
+            $BrickId->getQuantity()+$form->get('Quantity')->getData()
+        );
+        $this->entityManagerInterface->flush();
+    }
+
+    public function add($form): void{
+        $newBrick = $form->getData();
+        if(!$this->isInDatabase($newBrick)){
+            $this->entityManagerInterface->persist($newBrick);
+            $this->entityManagerInterface->flush();
+        }else{
+            $this->editBricksQuantity($newBrick, $form);
+        }
     }
 }

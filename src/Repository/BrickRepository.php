@@ -50,29 +50,29 @@ class BrickRepository extends ServiceEntityRepository
     }
 
     public function paginateBricks(string $search, string $orderBy, int $offset){
-        $qb = $this->createQueryBuilder('w');
+        $qb = $this->createQueryBuilder('b');
         $qb
-            ->orWhere('w.BrickId LIKE :search')
-            ->orWhere('LOWER(w.Name) LIKE LOWER(:search)')
+            ->orWhere('b.BrickId LIKE :search')
+            ->orWhere('LOWER(b.Name) LIKE LOWER(:search)')
             ->setParameter('search', '%'.$search.'%');
         switch($orderBy){
             case 'BrickId_ASC':
-                $qb->orderBy('w.BrickId', 'ASC');
+                $qb->orderBy('b.BrickId', 'ASC');
                 break;
             case 'BrickId_DESC':
-                $qb->orderBy('w.BrickId', 'DESC');
+                $qb->orderBy('b.BrickId', 'DESC');
                 break;
             case 'name_ASC':
-                $qb->orderBy('w.Name', 'ASC');
+                $qb->orderBy('b.Name', 'ASC');
                 break;
             case 'name_DESC':
-                $qb->orderBy('w.Name', 'DESC');
+                $qb->orderBy('b.Name', 'DESC');
                 break;
             case 'color_ASC':
-                $qb->orderBy('w.Color', 'ASC');
+                $qb->orderBy('b.Color', 'ASC');
                 break;
             case 'color_DESC':
-                $qb->orderBy('w.Color', 'DESC');
+                $qb->orderBy('b.Color', 'DESC');
                 break;
         }
         $qb
@@ -81,6 +81,16 @@ class BrickRepository extends ServiceEntityRepository
             ->getQuery();
         
         return new Paginator($qb);
+    }
+
+    public function findBrickBy(string $BrickId, string $Color){
+        $qb = $this->createQueryBuilder('b');
+        $qb
+            ->orWhere('b.BrickId LIKE :BrickId')
+            ->setParameter('BrickId', '%'.$BrickId.'%')
+            ->orWhere('LOWER(b.Color) LIKE LOWER(:Color)')
+            ->setParameter('Color', '%'.$Color.'%');
+        return $qb->getQuery();
     }
 
 }
