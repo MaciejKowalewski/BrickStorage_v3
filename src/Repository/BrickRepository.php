@@ -17,7 +17,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class BrickRepository extends ServiceEntityRepository
 {
-    public const PAGINATOR_PER_PAGE = 5;
+    public const PAGINATOR_PER_PAGE = 10;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -67,6 +67,12 @@ class BrickRepository extends ServiceEntityRepository
                 break;
             case 'name_DESC':
                 $qb->orderBy('w.Name', 'DESC');
+                break;
+            case 'color_ASC':
+                $qb->orderBy('w.Color', 'ASC');
+                break;
+            case 'color_DESC':
+                $qb->orderBy('w.Color', 'DESC');
                 break;
         }
         $qb

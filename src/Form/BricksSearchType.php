@@ -20,8 +20,8 @@ class BricksPaginator extends AbstractType
             ])
         ->add('sortBy',ChoiceType::class, [
             'choices' =>[
-                'Sortuj po numerze katalogowym rosnąco' => 'SetId_ASC',
-                'Sortuj po numerze katalogowym malejąco' => 'SetId_DESC',
+                'Sortuj po numerze katalogowym rosnąco' => 'BrickId_ASC',
+                'Sortuj po numerze katalogowym malejąco' => 'BrickId_DESC',
                 'Sortuj po nazwie A-Z' => 'name_ASC',
                 'Sortuj po nazwie Z-A' => 'name_DESC',
                 'Sortuj po kolorze A-Z' => 'color_ASC',

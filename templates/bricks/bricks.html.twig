@@ -6,13 +6,25 @@
 
 {{ dump() }}
 
+    {{form_start(form)}}
+    {{form_end(form)}}
+    <div>Znaleziono: 
+        {% if Bricks|length == 1 %}
+            1 zestaw.
+        {% elseif Bricks|length|last == 2 or Bricks|length|last == 3 or Bricks|length|last == 4 %}
+            {{ Bricks|length }} zestawy.
+        {% else %}
+            {{ Bricks|length }} zestawów.
+        {% endif %}
+    </div>
+    {% include 'bricks/paginator.html.twig' %}
     {% for Brick in Bricks %}
         <div class="brick">
-            {#<img src="{{Brick.ImagePath}}" alt="{{Brick.BrickId}}">
+            <img src="{{Brick.ImagePath}}" alt="{{Brick.BrickId}}">
             <h4>{{Brick.BrickId}}</h4>
             <h4>{{Brick.Name}}</h4>
-            <h4>{{Brick.BrickType}}, {{Brick.Color}}</h4>
-            <h5>ilość: {{Brick.Quantity}}</h4>#}
+            <h4>{{Brick.PartType}}, {{Brick.Color}}</h4>
+            <h5>ilość: {{Brick.Quantity}}</h4>
             <a href="/brick/{{ Brick.id }}">Edytuj</a>
         </div>
     {% endfor %}

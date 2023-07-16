@@ -9,12 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\BricksPaginator;
+use App\Form\AddBrickType;
 
 class BricksController extends AbstractController
 {
 
     public function __construct(
-        private BrickRepository $BrickRepository,
+        private BrickRepository $brickRepository,
         private BricksProvider $bricksProvider
     )
     {}
@@ -23,43 +24,31 @@ class BricksController extends AbstractController
     public function index(Request $request): Response
     {
         $form = $this->createForm(BricksPaginator::class);
-        $form->handleRequest($request);
-        $page = $request->query->getInt('page', 0);
-
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $search = $request->query->all()['wishlist_paginator']['search'];
-            $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
-            $bricks = $this->BrickRepository->paginateBricks($search, $sortBy, brickRepository::PAGINATOR_PER_PAGE*$page);
-        }else{
-            $bricks = $this->BrickRepository->paginateBricks('','SetId_ASC', brickRepository::PAGINATOR_PER_PAGE*$page);
-        }
+        $transformedData = $this->bricksProvider->transformDataForTwig($request, $form);
         return $this->render('bricks/bricks.html.twig', [
-            'Bricks' => $bricks,
+            'Bricks' => $transformedData['bricks'],
             'form' => $form,
-            'page' => $page,
+            'page' => $transformedData['page'],
             'PagiantorPerPage' => brickRepository::PAGINATOR_PER_PAGE,
         ]);
     }
 
-    //#[Route('/wishlist', name: 'wishlist')]
-    //public function index(Request $request): Response
-    //{
-    //    $form = $this->createForm(WishlistPaginator::class);
-    //    $form->handleRequest($request);
-    //    $page = $request->query->getInt('page', 0);
-    //    if ($form->isSubmitted() && $form->isValid()) { 
-    //        $search = $request->query->all()['wishlist_paginator']['search'];
-    //        $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
-    //        $wishlist = $this->wishRepository->paginateWishes($search,$sortBy,WishRepository::PAGINATOR_PER_PAGE*$page);
-    //    }else{
-    //        $wishlist = $this->wishRepository->paginateWishes('','SetId_ASC',WishRepository::PAGINATOR_PER_PAGE*$page);
-    //    }
-    //    
-    //    return $this->render('wish/index.html.twig', [
-    //        'Wishlist' => $wishlist,
-    //        'form' => $form,
-    //        'page' => $page,
-    //        'PagiantorPerPage' => WishRepository::PAGINATOR_PER_PAGE,
-    //    ]);
-    //}
+    #[Route('/brick/{id}', name: 'edit_brick')]
+    public function edit($id,Request $request): Response
+    {
+        $brick = $this->brickRepository->find($id);
+        $form = $this->createForm(AddBrickType::class, $brick);
+        $form->handleRequest($request);  
+
+         if ($form->isSubmitted() and $form->isValid()) {
+            $this->bricksProvider->edit($brick, $form);
+            $routeName = $request->attributes->get('_route');
+            return $this->redirectToRoute($routeName, ['id'=>$id]);
+         }
+
+        return $this->render('bricks/editBrick.html.twig', [
+            'brick' => $brick,
+            'form' => $form->createView(),
+        ]);
+    }
 }

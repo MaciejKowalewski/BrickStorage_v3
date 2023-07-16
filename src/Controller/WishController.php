@@ -65,7 +65,7 @@ class WishController extends AbstractController
         $form->handleRequest($request);  
 
          if ($form->isSubmitted() and $form->isValid()) {
-            $this->wishlistProvider->edit($id, $wish, $form);
+            $this->wishlistProvider->edit($wish, $form);
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
          }

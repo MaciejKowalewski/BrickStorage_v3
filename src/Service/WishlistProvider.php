@@ -17,7 +17,7 @@ class WishlistProvider{
         $this->entityManagerInterface->flush();
     }
 
-    public function edit(string $id, $wish, $form): void{
+    public function edit($wish, $form): void{
         $wish->setSetId($form->get('SetId')->getData());
         $wish->setName($form->get('Name')->getData());
         $wish->setImagePath($form->get('ImagePath')->getData());

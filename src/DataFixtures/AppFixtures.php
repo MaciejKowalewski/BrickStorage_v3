@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
         $brick1->setQuantity(2);
         $brick1->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=50946&C=11#T=S&C=11&O={"color":"11","ss":"PL","loc":"PL","rpp":"500","iconly":0}');
         $brick1->setImagePath('https://img.bricklink.com/ItemImage/PN/11/50946.png');
-        $brick1->setColor('black');
+        $brick1->setColor('Black');
         $brick1->setPartType('brick');
         $manager->persist($brick1);
 
@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
         $brick2->setQuantity(5);
         $brick2->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=52036&C=85#T=S&C=85&O={"color":"85","ss":"PL","loc":"PL","rpp":"500","iconly":0}');
         $brick2->setImagePath('https://img.bricklink.com/ItemImage/PN/85/52036.png');
-        $brick2->setColor('black');
+        $brick2->setColor('Dark bluish Gray');
         $brick2->setPartType('brick');
         $manager->persist($brick2);
 
@@ -37,7 +37,7 @@ class AppFixtures extends Fixture
         $brick3->setQuantity(15);
         $brick3->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=18892&C=11#T=S&C=11&O={"color":"11","rpp":"500","iconly":0}');
         $brick3->setImagePath('https://img.bricklink.com/ItemImage/PN/11/18892.png');
-        $brick3->setColor('black');
+        $brick3->setColor('Black');
         $brick3->setPartType('brick');
         $manager->persist($brick3);
 
@@ -47,7 +47,7 @@ class AppFixtures extends Fixture
         $brick4->setQuantity(3);
         $brick4->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=35789&C=11#T=S&C=11&O={"color":"11","rpp":"500","iconly":0}');
         $brick4->setImagePath('https://img.bricklink.com/ItemImage/PN/11/35789.png');
-        $brick4->setColor('black');
+        $brick4->setColor('Black');
         $brick4->setPartType('brick');
         $manager->persist($brick4);
 
@@ -57,7 +57,7 @@ class AppFixtures extends Fixture
         $brick5->setQuantity(1);
         $brick5->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=98281&C=11#T=S&C=11&O={"color":"11","rpp":"500","iconly":0}');
         $brick5->setImagePath('https://img.bricklink.com/ItemImage/PN/11/98281.png');
-        $brick5->setColor('black');
+        $brick5->setColor('Black');
         $brick5->setPartType('brick');
         $manager->persist($brick5);
 
@@ -67,7 +67,7 @@ class AppFixtures extends Fixture
         $brick6->setQuantity(5);
         $brick6->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=43719&C=11#T=S&C=11&O={"color":"11","rpp":"500","iconly":0}');
         $brick6->setImagePath('https://img.bricklink.com/ItemImage/PN/11/43719.png');
-        $brick6->setColor('black');
+        $brick6->setColor('Black');
         $brick6->setPartType('brick');
         $manager->persist($brick6);
 
@@ -77,7 +77,7 @@ class AppFixtures extends Fixture
         $brick7->setQuantity(5123);
         $brick7->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=970c00&C=85#T=S&C=85&O={"color":"85","rpp":"500","iconly":0}');
         $brick7->setImagePath('https://img.bricklink.com/ItemImage/PN/85/970c00.png');
-        $brick7->setColor('black');
+        $brick7->setColor('Dark Bluish Gray');
         $brick7->setPartType('brick');
         $manager->persist($brick7);
 
@@ -87,7 +87,7 @@ class AppFixtures extends Fixture
         $brick8->setQuantity(1);
         $brick8->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=973pb3162c01&C=59#T=S&C=59&O={"color":"59","rpp":"500","iconly":0}');
         $brick8->setImagePath('https://img.bricklink.com/ItemImage/PN/59/973pb3162c01.png');
-        $brick8->setColor('black');
+        $brick8->setColor('Dark Red');
         $brick8->setPartType('brick');
         $manager->persist($brick8);
 
@@ -97,7 +97,7 @@ class AppFixtures extends Fixture
         $brick9->setQuantity(1);
         $brick9->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=50943&C=86#T=S&C=86&O={"color":"86","rpp":"500","iconly":0}');
         $brick9->setImagePath('https://img.bricklink.com/ItemImage/PN/86/50943.png');
-        $brick9->setColor('black');
+        $brick9->setColor('Light Bluish Gray');
         $brick9->setPartType('brick');
         $manager->persist($brick9);
 
@@ -107,7 +107,7 @@ class AppFixtures extends Fixture
         $brick10->setQuantity(56);
         $brick10->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=3622&C=3#T=S&C=3&O={"color":"3","rpp":"500","iconly":0}');
         $brick10->setImagePath('https://img.bricklink.com/ItemImage/PN/3/3622.png');
-        $brick10->setColor('black');
+        $brick10->setColor('Yellow');
         $brick10->setPartType('brick');
         $manager->persist($brick10);
 

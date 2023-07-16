@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ brick.BrickId }} - {{ brick.Name }}{% endblock %}
+
+{% block body %}
+
+<a href="/bricks">Powrót do listy elementów!</a>
+
+{{form_start(form)}}
+{{form_end(form)}}
+
+<br>
+<br>
+<br>
+<a href="delete/{{ brick.id }}">Delete</a>
+
+{% endblock %}
