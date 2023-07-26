@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainPageController!{% endblock %}
+
+{% block body %}
+    <main>
+        <a href="/newElement">Dodaj nowy element</a>
+        {% for element in elements %}
+            <div class="MainPageElement">
+                <h4>{{element.name}}</h4>
+                <a href="{{element.url}}" target="_blank">
+                    <img src="{{element.imagePath}}" alt="{{element.name}}">
+                </a>
+                <a href="/el/{{element.id}}">Edytuj</a>
+            </div>
+        {% endfor %}
+    </main>
+{% endblock %}

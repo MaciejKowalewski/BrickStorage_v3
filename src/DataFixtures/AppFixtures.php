@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Brick;
 use App\Entity\Wish;
+use App\Entity\MainPageElement;
 
 class AppFixtures extends Fixture
 {
@@ -201,6 +202,25 @@ class AppFixtures extends Fixture
         $wish11->setEolYear(2024);
         $manager->persist($wish11);
 
+//---------------------------------------------------------------------------------------------------------------------------------------------
+
+        $el1 = new MainPageElement();
+        $el1->setUrl('https://fanklockow.pl');
+        $el1->setName('Fan Klocków');
+        $el1->setImagePath('https://i0.wp.com/fanklockow.pl/wp-content/uploads/2021/01/FanKlockow-logo-male.png?w=422&ssl=1');
+        $manager->persist($el1);
+
+        $el2 = new MainPageElement();
+        $el2->setUrl('https://faniklockow.pl');
+        $el2->setName('Fani Klocków');
+        $el2->setImagePath('https://faniklockow.pl/wp-content/uploads/2020/10/faniklockow_logo_ex.png');
+        $manager->persist($el2);
+
+        $el3 = new MainPageElement();
+        $el3->setUrl('https://promoklocki.pl');
+        $el3->setName('Promoklocki');
+        $el3->setImagePath('https://promoklocki.pl/static/promoklocki.png');
+        $manager->persist($el3);
 
         $manager->flush();
     }

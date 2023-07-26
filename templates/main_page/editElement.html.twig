@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ element.name }}{% endblock %}
+
+{% block body %}
+
+{{form_start(form)}}
+{{form_end(form)}}
+
+<br>
+<br>
+<br>
+<a href="delete/{{ element.id }}">Delete</a>
+
+{% endblock %}
