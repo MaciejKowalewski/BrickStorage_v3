@@ -17,7 +17,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class BrickRepository extends ServiceEntityRepository
 {
-    public const PAGINATOR_PER_PAGE = 10;
+    public const PAGINATOR_PER_PAGE = 20;
 
     public function __construct(ManagerRegistry $registry)
     {

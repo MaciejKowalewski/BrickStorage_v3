@@ -7,6 +7,8 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Brick;
 use App\Entity\Wish;
 use App\Entity\MainPageElement;
+use App\Entity\Minifigure;
+use App\Entity\Quantity;
 
 class AppFixtures extends Fixture
 {
@@ -82,16 +84,6 @@ class AppFixtures extends Fixture
         $brick7->setPartType('brick');
         $manager->persist($brick7);
 
-        $brick8 = new Brick();
-        $brick8->setBrickId('973pb3162c01');
-        $brick8->setName('Torso Jacket with Pockets and Nougat Collar over Bright Light Blue Shirt Pattern / Dark Red Arms / Yellow Hands');
-        $brick8->setQuantity(1);
-        $brick8->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=973pb3162c01&C=59#T=S&C=59&O={"color":"59","rpp":"500","iconly":0}');
-        $brick8->setImagePath('https://img.bricklink.com/ItemImage/PN/59/973pb3162c01.png');
-        $brick8->setColor('Dark Red');
-        $brick8->setPartType('brick');
-        $manager->persist($brick8);
-
         $brick9 = new Brick();
         $brick9->setBrickId(50943);
         $brick9->setName('Vehicle, Air Scoop Engine Top 2 x 2');
@@ -111,6 +103,181 @@ class AppFixtures extends Fixture
         $brick10->setColor('Yellow');
         $brick10->setPartType('brick');
         $manager->persist($brick10);
+
+        $brick11 = new Brick();
+        $brick11->setBrickId(29634);
+        $brick11->setName('Minifigure, Hair Female Very Curly, Parted in Middle');
+        $brick11->setQuantity(1);
+        $brick11->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=29634&idColor=11#T=C&C=11');
+        $brick11->setImagePath('https://img.bricklink.com/ItemImage/PN/11/29634.png');
+        $brick11->setColor('Black');
+        $brick11->setPartType('Minifigure, Hair');
+        $manager->persist($brick11);
+
+        $brick12 = new Brick();
+        $brick12->setBrickId('970c00');
+        $brick12->setName('Hips and Legs Plain');
+        $brick12->setQuantity(1);
+        $brick12->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=970c00&idColor=42#T=I&C=42');
+        $brick12->setImagePath('https://img.bricklink.com/ItemImage/PN/42/970c00.png');
+        $brick12->setColor('Medium Blue');
+        $brick12->setPartType('Minifigure, Legs');
+        $manager->persist($brick12);
+
+        $brick13 = new Brick();
+        $brick13->setBrickId('973pb2341c01');
+        $brick13->setName('Torso Female Open Jacket with 4 Buttons, Silver Pendant Necklace, Lavender Shirt Pattern / Medium Lavender Arms / Yellow Hands');
+        $brick13->setQuantity(1);
+        $brick13->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=973pb2341c01&idColor=157#T=I&C=157');
+        $brick13->setImagePath('https://img.bricklink.com/ItemImage/PN/157/973pb2341c01.png');
+        $brick13->setColor('Medium Lavender');
+        $brick13->setPartType('Minifigure, Torso Assembly');
+        $manager->persist($brick13);
+
+        $unitBrick = new Brick();
+        $unitBrick->setBrickId('twn385 unitBrick');
+        $unitBrick->setName('unitBrick');
+        $unitBrick->setQuantity(1);
+        $unitBrick->setBrickLinkSRC('unitBrick');
+        $unitBrick->setImagePath('unitBrick');
+        $unitBrick->setColor('unitBrick');
+        $unitBrick->setPartType('unitBrick');
+        $manager->persist($unitBrick);
+
+        $unitBrick2 = new Brick();
+        $unitBrick2->setBrickId('twn424 unitBrick');
+        $unitBrick2->setName('unitBrick');
+        $unitBrick2->setQuantity(1);
+        $unitBrick2->setBrickLinkSRC('unitBrick');
+        $unitBrick2->setImagePath('unitBrick');
+        $unitBrick2->setColor('unitBrick');
+        $unitBrick2->setPartType('unitBrick');
+        $manager->persist($unitBrick2);
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        $minifig = new Minifigure();
+        $minifig->setMinifigId('twn385');
+        $minifig->setName('Female, Bushy Black Hair, Medium Lavender Jacket on Lavender Shirt, Medium Blue Legs');
+        $minifig->setQuantity(1);
+        $minifig->setBricklinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?M=twn385&#T=I');
+        $minifig->setImagePath('https://img.bricklink.com/ItemImage/MN/0/twn385.png');
+        
+
+        $brick14 = new Brick();
+        $brick14->setBrickId('3626cpb1352');
+        $brick14->setName('Minifigure, Head Dual Sided Female Black Eyebrows, Freckles, Eyelashes, Nougat Lips, Open Mouth Smile with Top Teeth and Tongue / Sleeping Pattern - Hollow Stud
+        ');
+        $brick14->setQuantity(1);
+        $brick14->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=3626cpb1352&idColor=3#T=C&C=3');
+        $brick14->setImagePath('https://img.bricklink.com/ItemImage/PN/3/3626cpb1352.png');
+        $brick14->setColor('Yellow');
+        $brick14->setPartType('Minifigure, Head');
+        
+
+        $quan = new Quantity();
+        $quan2 = new Quantity();
+        $quan3 = new Quantity();
+        $quan4 = new Quantity();
+        $quan5 = new Quantity();
+        $quan->setQuantity(1);
+        $quan2->setQuantity(1);
+        $quan3->setQuantity(1);
+        $quan4->setQuantity(1);
+        $quan5->setQuantity(1);
+        $quan->setBrickID($brick11);
+        $quan2->setBrickID($brick12);
+        $quan3->setBrickID($brick13);
+        $quan4->setBrickID($brick14);
+        $quan5->setBrickID($unitBrick);
+        $quan->setMinifigureID($minifig); 
+        $quan2->setMinifigureID($minifig); 
+        $quan3->setMinifigureID($minifig); 
+        $quan4->setMinifigureID($minifig); 
+        $quan5->setMinifigureID($minifig); 
+        $manager->persist($quan);    
+        $manager->persist($quan2);    
+        $manager->persist($quan3);    
+        $manager->persist($quan4);    
+        $manager->persist($quan5);    
+        $manager->persist($minifig);
+        $manager->persist($brick14);
+
+        $brick15 = new Brick();
+        $brick15->setBrickId('90386');
+        $brick15->setName('Minifigure, Headgear Beret');
+        $brick15->setQuantity(1);
+        $brick15->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=90386&idColor=11#T=C&C=11');
+        $brick15->setImagePath('https://img.bricklink.com/ItemImage/PN/11/90386.png');
+        $brick15->setColor('Black');
+        $brick15->setPartType('Minifigure, Headgear');
+        $manager->persist($brick15);
+
+        $brick16 = new Brick();
+        $brick16->setBrickId('970c00');
+        $brick16->setName('Hips and Legs Plain');
+        $brick16->setQuantity(1);
+        $brick16->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=970c00&idColor=85#T=I&C=85');
+        $brick16->setImagePath('https://img.bricklink.com/ItemImage/PN/85/970c00.png');
+        $brick16->setColor('Dark Bluish Gray');
+        $brick16->setPartType('Minifigure, Legs');
+        $manager->persist($brick16);
+
+        $brick17 = new Brick();
+        $brick17->setBrickId('973pb3162c01');
+        $brick17->setName('Torso Jacket with Pockets and Nougat Collar over Bright Light Blue Shirt Pattern / Dark Red Arms / Yellow Hands');
+        $brick17->setQuantity(1);
+        $brick17->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=973pb3162c01&idColor=59#T=I&C=59');
+        $brick17->setImagePath('https://img.bricklink.com/ItemImage/PN/59/973pb3162c01.png');
+        $brick17->setColor('Dark Red');
+        $brick17->setPartType('Minifigure, Torso Assembly, Decor');
+        $manager->persist($brick17);
+
+        $brick18 = new Brick();
+        $brick18->setBrickId('3626cpb1911');
+        $brick18->setName('Minifigure, Head Dark Tan Eyebrows, Moustache, Dark Tan and Gray Sideburns, Stubble and White Pupils Pattern - Hollow Stud');
+        $brick18->setQuantity(1);
+        $brick18->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=3626cpb1911&idColor=3#T=C&C=3');
+        $brick18->setImagePath('https://img.bricklink.com/ItemImage/PN/3/3626cpb1911.png');
+        $brick18->setColor('Yellow');
+        $brick18->setPartType('Minifigure, Head');
+        $manager->persist($brick18);
+
+        $minifig2 = new Minifigure();
+        $minifig2->setMinifigId('twn424');
+        $minifig2->setName('Man, Dark Red Jacket with Bright Light Blue Shirt, Dark Bluish Gray Legs, Black Beret, Moustache and Sideburns (Vintage Taxi Driver)');
+        $minifig2->setQuantity(1);
+        $minifig2->setBricklinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?M=twn424&#T=I');
+        $minifig2->setImagePath('https://img.bricklink.com/ItemImage/MN/0/twn424.png');
+        $manager->persist($minifig2);
+
+        $quan5 = new Quantity();
+        $quan6 = new Quantity();
+        $quan7 = new Quantity();
+        $quan8 = new Quantity();
+        $quan9 = new Quantity();
+        $quan5->setQuantity(1);
+        $quan6->setQuantity(1);
+        $quan7->setQuantity(1);
+        $quan8->setQuantity(1);
+        $quan9->setQuantity(1);
+        $quan5->setBrickID($brick15);
+        $quan6->setBrickID($brick16);
+        $quan7->setBrickID($brick17);
+        $quan8->setBrickID($brick18);
+        $quan9->setBrickID($unitBrick2);
+        $quan5->setMinifigureID($minifig2); 
+        $quan6->setMinifigureID($minifig2); 
+        $quan7->setMinifigureID($minifig2); 
+        $quan8->setMinifigureID($minifig2); 
+        $quan9->setMinifigureID($minifig2); 
+        $manager->persist($quan5);    
+        $manager->persist($quan6);    
+        $manager->persist($quan7);    
+        $manager->persist($quan8);
+        $manager->persist($quan9);
+
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
         $wish1 = new Wish();
@@ -221,6 +388,11 @@ class AppFixtures extends Fixture
         $el3->setName('Promoklocki');
         $el3->setImagePath('https://promoklocki.pl/static/promoklocki.png');
         $manager->persist($el3);
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
         $manager->flush();
     }

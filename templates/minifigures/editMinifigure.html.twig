@@ -1,13 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Klocki{% endblock %}
+{% block title %}{{ minifigure.minifigId }} - {{ minifigure.name }}{% endblock %}
 
 {% block body %}
 
-    <a href="/newbrick">Dodaj nowy element</a>
-    {{form_start(form)}}
-    {{form_end(form)}}
-    <div>Znaleziono: 
+<a href="/minifigures">Powrót do listy Minifigurek</a>
+
+{{dump()}}
+
+{{form_start(form)}}
+{{form_end(form)}}
+
+<div>Znaleziono: 
         {% if Bricks|length == 1 %}
             1 element.
         {% elseif Bricks|length|last == 2 or Bricks|length|last == 3 or Bricks|length|last == 4 %}
@@ -16,7 +20,6 @@
             {{ Bricks|length }} elementów.
         {% endif %}
     </div>
-    {% include 'bricks/paginator.html.twig' %}
     {% for Brick in Bricks %}
         <div class="brick">
             <img src="{{Brick.ImagePath}}" alt="{{Brick.BrickId}}">
@@ -24,8 +27,11 @@
             <h4>{{Brick.Name}}</h4>
             <h4>{{Brick.PartType}}, {{Brick.Color}}</h4>
             <h5>ilość: {{Brick.Quantity}}</h4>
-            <a href="/brick/{{ Brick.id }}">Edytuj</a>
         </div>
     {% endfor %}
+    
+<a href="delete/{{ minifigure.id }}">Delete</a>
+
+
 
 {% endblock %}

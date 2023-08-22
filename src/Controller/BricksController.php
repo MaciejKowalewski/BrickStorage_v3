@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\BricksPaginator;
+use App\Form\BricksSearchType;
 use App\Form\AddBrickType;
 
 class BricksController extends AbstractController
@@ -24,7 +24,7 @@ class BricksController extends AbstractController
     #[Route('/bricks', name: 'bricks')]
     public function index(Request $request): Response
     {
-        $form = $this->createForm(BricksPaginator::class);
+        $form = $this->createForm(BricksSearchType::class);
         $transformedData = $this->bricksProvider->transformDataForTwig($request, $form);
         return $this->render('bricks/bricks.html.twig', [
             'Bricks' => $transformedData['bricks'],

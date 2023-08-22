@@ -7,7 +7,7 @@
     <div>Znaleziono: 
         {% if Wishlist|length == 1 %}
             1 zestaw.
-        {% elseif Wishlist|length|last == 2 or Wishlist|length|last == 3 or Wishlist|length|last == 4 %}
+        {% elseif (Wishlist|length|last == 2 or Wishlist|length|last == 3 or Wishlist|length|last == 4) and (Wishlist|length < 10 and Wishlist|length > 20)  %}
             {{ Wishlist|length }} zestawy.
         {% else %}
             {{ Wishlist|length }} zestawów.

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Minifigurki{% endblock %}
+
+{% block body %}
+
+    {{dump()}}
+
+    <a href="/newminifigure">Dodaj nową minifigurkę</a>
+    {{form_start(form)}}
+    {{form_end(form)}}
+    <div>Znaleziono: 
+        {% if Minifigs|length == 1 %}
+            1 minifigurkę.
+        {% elseif Minifigs|length|last == 2 or Minifigs|length|last == 3 or Minifigs|length|last == 4 %}
+            {{ Minifigs|length }} minifigurki.
+        {% else %}
+            {{ Minifigs|length }} minifigurek.
+        {% endif %}
+    </div>
+    {% include 'minifigures/paginator.html.twig' %}
+    {% for Minifig in Minifigs %}
+        <div class="Minifig">
+            <img src="{{Minifig.imagePath}}" alt="{{Minifig.minifigId}}">
+            <h4>{{Minifig.minifigId}}</h4>
+            <h4>{{Minifig.name}}</h4>
+            <h5>ilość: {{Minifig.quantity}}</h4>
+            <a href="/minifigure/{{ Minifig.id }}">Edytuj</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

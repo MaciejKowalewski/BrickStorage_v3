@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 
-class BricksSearchType extends AbstractType
+class MinifiguresSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -20,12 +20,10 @@ class BricksSearchType extends AbstractType
             ])
         ->add('sortBy',ChoiceType::class, [
             'choices' =>[
-                'Sortuj po numerze katalogowym rosnąco' => 'BrickId_ASC',
-                'Sortuj po numerze katalogowym malejąco' => 'BrickId_DESC',
+                'Sortuj po numerze katalogowym rosnąco' => 'MinifigureId_ASC',
+                'Sortuj po numerze katalogowym malejąco' => 'MinifigureId_DESC',
                 'Sortuj po nazwie A-Z' => 'name_ASC',
                 'Sortuj po nazwie Z-A' => 'name_DESC',
-                'Sortuj po kolorze A-Z' => 'color_ASC',
-                'Sortuj po kolorze Z-A' => 'color_DESC',
             ],
             'label' => 'Sortowanie: '
         ])

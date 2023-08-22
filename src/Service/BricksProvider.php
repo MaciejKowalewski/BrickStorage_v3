@@ -18,8 +18,8 @@ class BricksProvider{
         $form->handleRequest($request);
         $page = $request->query->getInt('page', 0);
         if ($form->isSubmitted() && $form->isValid()) { 
-            $search = $request->query->all()['bricks_paginator']['search'];
-            $sortBy = $request->query->all()['bricks_paginator']['sortBy'];
+            $search = $request->query->all()['bricks_search']['search'];
+            $sortBy = $request->query->all()['bricks_search']['sortBy'];
             $bricks = $this->BrickRepository->paginateBricks($search,$sortBy, BrickRepository::PAGINATOR_PER_PAGE*$page);
         }else{
             $bricks = $this->BrickRepository->paginateBricks('','BrickId_ASC', BrickRepository::PAGINATOR_PER_PAGE*$page);
@@ -44,7 +44,7 @@ class BricksProvider{
         $this->entityManagerInterface->flush();
     }
 
-    private function isInDatabase($newBrick): Bool{
+    public function isInDatabase($newBrick): Bool{
         $isBrick = $this->BrickRepository->findBy(
             ['BrickId' => $newBrick->getBrickId(),
             'Color' => $newBrick->getColor()]
