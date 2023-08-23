@@ -17,8 +17,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class WishRepository extends ServiceEntityRepository
 {
-    const PAGINATOR_PER_PAGE = 20;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Wish::class);
@@ -42,7 +40,7 @@ class WishRepository extends ServiceEntityRepository
         }
     }
 
-    public function paginateWishes(string $search, string $orderBy, int $offset){
+    public function paginateWishes(string $search, string $orderBy, int $offset, int $paginatorPerPage){
         $qb = $this->createQueryBuilder('w');
         $qb
             ->orWhere('w.SetId LIKE :search')
@@ -64,7 +62,7 @@ class WishRepository extends ServiceEntityRepository
         }
         $qb
             ->setFirstResult($offset)
-            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+            ->setMaxResults($paginatorPerPage)
             ->getQuery();
         
         return new Paginator($qb);

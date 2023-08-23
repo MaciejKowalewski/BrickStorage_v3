@@ -2,15 +2,14 @@
 
 namespace App\Service;
 use App\Repository\WishRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\WishlistPaginator;
+use Symfony\Component\HttpFoundation\Request;
 
-class WishlistProvider{
+class WishlistProvider extends AbstractProvider{
 
     public function __construct(
         protected WishRepository $wishRepository,
-        protected EntityManagerInterface $entityManagerInterface,
     ){}
+
     public function delete(string $id): void{
         $wish = $this->wishRepository->find($id);
         $this->entityManagerInterface->remove($wish);
@@ -18,11 +17,6 @@ class WishlistProvider{
     }
 
     public function edit($wish, $form): void{
-        $wish->setSetId($form->get('SetId')->getData());
-        $wish->setName($form->get('Name')->getData());
-        $wish->setImagePath($form->get('ImagePath')->getData());
-        $wish->setPromoklockiSRC($form->get('PromoklockiSRC')->getData());
-        $wish->setEolYear($form->get('EolYear')->getData());
         $this->entityManagerInterface->flush();
     }
 
@@ -31,27 +25,24 @@ class WishlistProvider{
         return !empty($isSet);
     }
 
-    public function add($form): array{
+    public function add($form): void{
         $newWish = $form->getData();
         if(!$this->isInDatabase($newWish)){
             $this->entityManagerInterface->persist($newWish);
             $this->entityManagerInterface->flush();
-            return [1];
-        }else{
-            return [0,'Zestaw już został dodany do listy życzeń!'];
         }
     }
 
-    public function transformDataForTwig($request, $form): array{
-        $form->handleRequest($request);
+    public function transformDataForTwig(Request $request, $form): array{
         $page = $request->query->getInt('page', 0);
-        if ($form->isSubmitted() && $form->isValid()) { 
+        if($form->isSubmitted() && $form->isValid()){
             $search = $request->query->all()['wishlist_paginator']['search'];
             $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
-            $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, WishRepository::PAGINATOR_PER_PAGE*$page);
+            $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $this->paginatorPerPage*$page, $this->paginatorPerPage);
         }else{
-            $wishlist = $this->wishRepository->paginateWishes('','SetId_ASC', WishRepository::PAGINATOR_PER_PAGE*$page);
+            $wishlist = $this->wishRepository->paginateWishes('','SetId_ASC', $this->paginatorPerPage*$page, $this->paginatorPerPage);
         }
-        return array('wishlist'=>$wishlist, 'page'=>$page);
+        
+        return array('wishlist'=>$wishlist, 'page'=>$page, 'paginatorPerPage'=>$this->paginatorPerPage);
     }
 }

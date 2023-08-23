@@ -26,13 +26,14 @@ class WishController extends AbstractController
     public function index(Request $request): Response
     {
         $form = $this->createForm(WishlistPaginator::class);
-        $transformedDAta = $this->wishlistProvider->transformDataForTwig($request, $form);
+        $form->handleRequest($request);
+        $transformedData = $this->wishlistProvider->transformDataForTwig($request, $form);
         
         return $this->render('wish/wishlist.html.twig', [
-            'Wishlist' => $transformedDAta['wishlist'],
+            'Wishlist' => $transformedData['wishlist'],
             'form' => $form,
-            'page' => $transformedDAta['page'],
-            'PagiantorPerPage' => WishRepository::PAGINATOR_PER_PAGE,
+            'page' => $transformedData['page'],
+            'PagiantorPerPage' => $transformedData['paginatorPerPage'],
         ]);
     }
 
@@ -42,19 +43,14 @@ class WishController extends AbstractController
         $wish = new Wish;
         $form = $this->createForm(AddWishType::class, $wish);
         $form->handleRequest($request);  
-        $message = '';
 
          if ($form->isSubmitted() and $form->isValid()) {
-            if($this->wishlistProvider->add($form)[0]){
-                $this->wishlistProvider->add($form);
-                return $this->redirectToRoute('wishlist');
-            }else{
-                $message = $this->wishlistProvider->add($form)[1];
-            }
+            $this->wishlistProvider->add($form);
+            return $this->redirectToRoute('wishlist');
          }
+
         return $this->render('wish/addWish.html.twig', [
             'form' => $form,
-            'message' => $message,
         ]);
     }
 
