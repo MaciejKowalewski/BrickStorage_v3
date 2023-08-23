@@ -27,8 +27,13 @@ class WishController extends AbstractController
     {
         $form = $this->createForm(WishlistPaginator::class);
         $form->handleRequest($request);
-        $transformedData = $this->wishlistProvider->transformDataForTwig($request, $form);
-        
+        if($form->isSubmitted() && $form->isValid()){
+            $search = $request->query->all()['wishlist_paginator']['search'];
+            $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
+            $transformedData = $this->wishlistProvider->transformDataForTwig($request, $sortBy,  $search);
+        }else{
+            $transformedData = $this->wishlistProvider->transformDataForTwig($request, 'SetId_ASC');
+        }
         return $this->render('wish/wishlist.html.twig', [
             'Wishlist' => $transformedData['wishlist'],
             'form' => $form,
@@ -43,12 +48,10 @@ class WishController extends AbstractController
         $wish = new Wish;
         $form = $this->createForm(AddWishType::class, $wish);
         $form->handleRequest($request);  
-
          if ($form->isSubmitted() and $form->isValid()) {
             $this->wishlistProvider->add($form);
             return $this->redirectToRoute('wishlist');
          }
-
         return $this->render('wish/addWish.html.twig', [
             'form' => $form,
         ]);
@@ -60,13 +63,11 @@ class WishController extends AbstractController
         $wish = $this->wishRepository->find($id);
         $form = $this->createForm(AddWishType::class, $wish);
         $form->handleRequest($request);  
-
          if ($form->isSubmitted() and $form->isValid()) {
             $this->wishlistProvider->edit($wish, $form);
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
          }
-
         return $this->render('wish/editWish.html.twig', [
             'wish' => $wish,
             'form' => $form->createView(),
@@ -79,5 +80,4 @@ class WishController extends AbstractController
         $this->wishlistProvider->delete($id);
         return $this->redirectToRoute('wishlist');
     }
-
 }

@@ -3,11 +3,13 @@
 namespace App\Service;
 use App\Repository\WishRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 class WishlistProvider extends AbstractProvider{
 
     public function __construct(
-        protected WishRepository $wishRepository,
+        private WishRepository $wishRepository,
+        private EntityManagerInterface $entityManagerInterface,
     ){}
 
     public function delete(string $id): void{
@@ -33,16 +35,9 @@ class WishlistProvider extends AbstractProvider{
         }
     }
 
-    public function transformDataForTwig(Request $request, $form): array{
+    public function transformDataForTwig(Request $request, string $sortBy, string $search=''): array{
         $page = $request->query->getInt('page', 0);
-        if($form->isSubmitted() && $form->isValid()){
-            $search = $request->query->all()['wishlist_paginator']['search'];
-            $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
-            $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $this->paginatorPerPage*$page, $this->paginatorPerPage);
-        }else{
-            $wishlist = $this->wishRepository->paginateWishes('','SetId_ASC', $this->paginatorPerPage*$page, $this->paginatorPerPage);
-        }
-        
+        $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $this->paginatorPerPage*$page, $this->paginatorPerPage);
         return array('wishlist'=>$wishlist, 'page'=>$page, 'paginatorPerPage'=>$this->paginatorPerPage);
     }
 }
