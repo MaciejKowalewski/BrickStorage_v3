@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Form\WishlistPaginator;
 
 class WishController extends AbstractController
@@ -18,7 +17,6 @@ class WishController extends AbstractController
     public function __construct(
         private WishRepository $wishRepository,
         private WishlistProvider $wishlistProvider,
-        private EntityManagerInterface $entityManagerInterface,
     )
     {}
 
@@ -36,7 +34,7 @@ class WishController extends AbstractController
         }
         return $this->render('wish/wishlist.html.twig', [
             'Wishlist' => $transformedData['wishlist'],
-            'form' => $form,
+            'form' => $form->createView(),
             'page' => $transformedData['page'],
             'PagiantorPerPage' => $transformedData['paginatorPerPage'],
         ]);
@@ -53,7 +51,7 @@ class WishController extends AbstractController
             return $this->redirectToRoute('wishlist');
          }
         return $this->render('wish/addWish.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

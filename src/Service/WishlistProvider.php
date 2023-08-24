@@ -18,7 +18,7 @@ class WishlistProvider extends AbstractProvider{
         $this->entityManagerInterface->flush();
     }
 
-    public function edit($wish, $form): void{
+    public function edit(): void{
         $this->entityManagerInterface->flush();
     }
 
@@ -37,7 +37,8 @@ class WishlistProvider extends AbstractProvider{
 
     public function transformDataForTwig(Request $request, string $sortBy, string $search=''): array{
         $page = $request->query->getInt('page', 0);
-        $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $this->paginatorPerPage*$page, $this->paginatorPerPage);
+        $offset = $this->paginatorPerPage*$page;
+        $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $offset, $this->paginatorPerPage);
         return array('wishlist'=>$wishlist, 'page'=>$page, 'paginatorPerPage'=>$this->paginatorPerPage);
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Service;
 
 use App\Entity\Brick;
+use Symfony\Component\Form\Form;
 use App\Repository\BrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
-class BricksProvider{
+class BricksProvider extends AbstractProvider{
 
     public function __construct(
         private BrickRepository $BrickRepository,
@@ -14,27 +16,14 @@ class BricksProvider{
     )
     {}
 
-    public function transformDataForTwig($request, $form): array{
-        $form->handleRequest($request);
+    public function transformDataForTwig(Request $request, string $sortBy, string $search=''): array{
         $page = $request->query->getInt('page', 0);
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $search = $request->query->all()['bricks_search']['search'];
-            $sortBy = $request->query->all()['bricks_search']['sortBy'];
-            $bricks = $this->BrickRepository->paginateBricks($search,$sortBy, BrickRepository::PAGINATOR_PER_PAGE*$page);
-        }else{
-            $bricks = $this->BrickRepository->paginateBricks('','BrickId_ASC', BrickRepository::PAGINATOR_PER_PAGE*$page);
-        }
-        return array('bricks'=>$bricks, 'page'=>$page);
+        $offset = $this->paginatorPerPage*$page;
+        $bricks = $this->BrickRepository->paginateBricks($search,$sortBy, $offset, $this->paginatorPerPage);
+        return array('bricks'=>$bricks, 'page'=>$page, 'paginatorPerPage'=>$this->paginatorPerPage);
     }  
 
-    public function edit($brick, $form): void{
-        $brick->setBrickId($form->get('BrickId')->getData());
-        $brick->setName($form->get('Name')->getData());
-        $brick->setImagePath($form->get('ImagePath')->getData());
-        $brick->setQuantity($form->get('Quantity')->getData());
-        $brick->setBricklinkSRC($form->get('BricklinkSRC')->getData());
-        $brick->setColor($form->get('Color')->getData());
-        $brick->setPartType($form->get('PartType')->getData());
+    public function edit(): void{
         $this->entityManagerInterface->flush();
     }
 
@@ -42,14 +31,6 @@ class BricksProvider{
         $brick = $this->BrickRepository->find($id);
         $this->entityManagerInterface->remove($brick);
         $this->entityManagerInterface->flush();
-    }
-
-    public function isInDatabase($newBrick): Bool{
-        $isBrick = $this->BrickRepository->findBy(
-            ['BrickId' => $newBrick->getBrickId(),
-            'Color' => $newBrick->getColor()]
-            );
-        return !empty($isBrick);
     }
 
     private function editBricksQuantity($newBrick, $form){
@@ -65,7 +46,7 @@ class BricksProvider{
 
     public function add($form): void{
         $newBrick = $form->getData();
-        if(!$this->isInDatabase($newBrick)){
+        if(!$this->isBrickInDatabase($newBrick, $this->BrickRepository)){
             $this->entityManagerInterface->persist($newBrick);
             $this->entityManagerInterface->flush();
         }else{

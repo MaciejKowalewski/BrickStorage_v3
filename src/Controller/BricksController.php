@@ -14,7 +14,6 @@ use App\Form\AddBrickType;
 
 class BricksController extends AbstractController
 {
-
     public function __construct(
         private BrickRepository $brickRepository,
         private BricksProvider $bricksProvider
@@ -25,12 +24,34 @@ class BricksController extends AbstractController
     public function index(Request $request): Response
     {
         $form = $this->createForm(BricksSearchType::class);
-        $transformedData = $this->bricksProvider->transformDataForTwig($request, $form);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) { 
+            $search = $request->query->all()['bricks_search']['search'];
+            $sortBy = $request->query->all()['bricks_search']['sortBy'];
+            $transformedData = $this->bricksProvider->transformDataForTwig($request, $sortBy, $search);
+        }else{
+            $transformedData = $this->bricksProvider->transformDataForTwig($request, 'BrickId_ASC');
+        }
         return $this->render('bricks/bricks.html.twig', [
             'Bricks' => $transformedData['bricks'],
-            'form' => $form,
+            'form' => $form->createView(),
             'page' => $transformedData['page'],
-            'PagiantorPerPage' => brickRepository::PAGINATOR_PER_PAGE,
+            'PagiantorPerPage' => $transformedData['paginatorPerPage'],
+        ]);
+    }
+
+    #[Route('/newbrick', name: 'add_newbrick')]
+    public function add(Request $request): Response
+    {
+        $wish = new Brick;
+        $form = $this->createForm(AddBrickType::class, $wish);
+        $form->handleRequest($request);  
+         if ($form->isSubmitted() and $form->isValid()) {
+            $this->bricksProvider->add($form);
+            return $this->redirectToRoute('bricks');
+         }
+        return $this->render('bricks/addBrick.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
@@ -40,13 +61,11 @@ class BricksController extends AbstractController
         $brick = $this->brickRepository->find($id);
         $form = $this->createForm(AddBrickType::class, $brick);
         $form->handleRequest($request);  
-
          if ($form->isSubmitted() and $form->isValid()) {
-            $this->bricksProvider->edit($brick, $form);
+            $this->bricksProvider->edit();
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
          }
-
         return $this->render('bricks/editBrick.html.twig', [
             'brick' => $brick,
             'form' => $form->createView(),
@@ -58,21 +77,5 @@ class BricksController extends AbstractController
     {
         $this->bricksProvider->delete($id);
         return $this->redirectToRoute('bricks');
-    }
-
-    #[Route('/newbrick', name: 'add_newbrick')]
-    public function add(Request $request): Response
-    {
-        $wish = new Brick;
-        $form = $this->createForm(AddBrickType::class, $wish);
-        $form->handleRequest($request);  
-
-         if ($form->isSubmitted() and $form->isValid()) {
-            $this->bricksProvider->add($form);
-            return $this->redirectToRoute('bricks');
-         }
-        return $this->render('bricks/addBrick.html.twig', [
-            'form' => $form,
-        ]);
     }
 }

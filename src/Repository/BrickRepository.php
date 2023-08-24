@@ -17,8 +17,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class BrickRepository extends ServiceEntityRepository
 {
-    public const PAGINATOR_PER_PAGE = 20;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Brick::class);
@@ -49,7 +47,7 @@ class BrickRepository extends ServiceEntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function paginateBricks(string $search, string $orderBy, int $offset){
+    public function paginateBricks(string $search, string $orderBy, int $offset, int $paginatorPerPage){
         $qb = $this->createQueryBuilder('b');
         $qb
             ->orWhere('b.BrickId LIKE :search')
@@ -77,7 +75,7 @@ class BrickRepository extends ServiceEntityRepository
         }
         $qb
             ->setFirstResult($offset)
-            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+            ->setMaxResults($paginatorPerPage)
             ->getQuery();
         
         return new Paginator($qb);
