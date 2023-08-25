@@ -11,12 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\BricksSearchType;
 use App\Form\AddBrickType;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BricksController extends AbstractController
 {
     public function __construct(
         private BrickRepository $brickRepository,
-        private BricksProvider $bricksProvider
+        private BricksProvider $bricksProvider,
+        private EntityManagerInterface $entityManagerInterface,
     )
     {}
 
@@ -62,7 +64,7 @@ class BricksController extends AbstractController
         $form = $this->createForm(AddBrickType::class, $brick);
         $form->handleRequest($request);  
          if ($form->isSubmitted() and $form->isValid()) {
-            $this->bricksProvider->edit();
+            $this->bricksProvider->edit($this->entityManagerInterface);
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
          }
@@ -75,7 +77,7 @@ class BricksController extends AbstractController
     #[Route('/brick/delete/{id}', name: 'delete_brick')]
     public function delete($id): Response
     {
-        $this->bricksProvider->delete($id);
+        $this->bricksProvider->delete($id, $this->brickRepository, $this->entityManagerInterface);
         return $this->redirectToRoute('bricks');
     }
 }

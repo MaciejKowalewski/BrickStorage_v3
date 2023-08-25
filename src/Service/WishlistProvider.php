@@ -2,6 +2,7 @@
 
 namespace App\Service;
 use App\Repository\WishRepository;
+use App\Entity\Wish;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -12,19 +13,11 @@ class WishlistProvider extends AbstractProvider{
         private EntityManagerInterface $entityManagerInterface,
     ){}
 
-    public function delete(string $id): void{
-        $wish = $this->wishRepository->find($id);
-        $this->entityManagerInterface->remove($wish);
-        $this->entityManagerInterface->flush();
-    }
-
-    public function edit(): void{
-        $this->entityManagerInterface->flush();
-    }
-
-    private function isInDatabase($newWish): Bool{
-        $isSet = $this->wishRepository->findBy(['SetId' => $newWish->getSetId()]);
-        return !empty($isSet);
+    public function transformDataForTwig(Request $request, string $sortBy, string $search=''): array{
+        $page = $request->query->getInt('page', 0);
+        $offset = $this->paginatorPerPage*$page;
+        $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $offset, $this->paginatorPerPage);
+        return array('wishlist'=>$wishlist, 'page'=>$page, 'paginatorPerPage'=>$this->paginatorPerPage);
     }
 
     public function add($form): void{
@@ -35,10 +28,8 @@ class WishlistProvider extends AbstractProvider{
         }
     }
 
-    public function transformDataForTwig(Request $request, string $sortBy, string $search=''): array{
-        $page = $request->query->getInt('page', 0);
-        $offset = $this->paginatorPerPage*$page;
-        $wishlist = $this->wishRepository->paginateWishes($search,$sortBy, $offset, $this->paginatorPerPage);
-        return array('wishlist'=>$wishlist, 'page'=>$page, 'paginatorPerPage'=>$this->paginatorPerPage);
+    private function isInDatabase(Wish $newWish): Bool{
+        $isSet = $this->wishRepository->findBy(['SetId' => $newWish->getSetId()]);
+        return !empty($isSet);
     }
 }

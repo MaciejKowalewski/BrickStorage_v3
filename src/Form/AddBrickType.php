@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class AddBrickType extends AbstractType
 {
@@ -20,7 +21,7 @@ class AddBrickType extends AbstractType
             ->add('Name',TextType::class,[
                 'label' => 'Nazwa elementu: '
                 ])
-            ->add('Quantity',TextType::class,[
+            ->add('Quantity',IntegerType::class,[
                 'label' => 'Ilość: '
                 ])
             ->add('BricklinkSRC')

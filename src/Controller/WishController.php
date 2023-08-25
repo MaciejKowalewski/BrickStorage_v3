@@ -11,12 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\WishlistPaginator;
+use Doctrine\ORM\EntityManagerInterface;
 
 class WishController extends AbstractController
 {
     public function __construct(
         private WishRepository $wishRepository,
         private WishlistProvider $wishlistProvider,
+        private EntityManagerInterface $entityManagerInterface,
     )
     {}
 
@@ -62,7 +64,7 @@ class WishController extends AbstractController
         $form = $this->createForm(AddWishType::class, $wish);
         $form->handleRequest($request);  
          if ($form->isSubmitted() and $form->isValid()) {
-            $this->wishlistProvider->edit($wish, $form);
+            $this->wishlistProvider->edit($this->entityManagerInterface);
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
          }
@@ -75,7 +77,7 @@ class WishController extends AbstractController
     #[Route('/wish/delete/{id}', name: 'delete_wish')]
     public function delete($id): Response
     {
-        $this->wishlistProvider->delete($id);
+        $this->wishlistProvider->delete($id, $this->wishRepository, $this->entityManagerInterface);
         return $this->redirectToRoute('wishlist');
     }
 }

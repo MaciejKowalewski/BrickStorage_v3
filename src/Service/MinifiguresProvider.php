@@ -11,63 +11,36 @@ use App\Entity\Brick;
 use App\Service\BricksProvider;
 use App\Repository\BrickRepository;
 use App\Repository\QuantityRepository;
+use App\Service\RequiredParameter;
+use Symfony\Component\Form\Form;
 
 
-class MinifiguresProvider{
+class MinifiguresProvider extends AbstractProvider{
 
     public function __construct(
         private MinifigureRepository $minifigureRepository,
         private EntityManagerInterface $entityManagerInterface,
         private Scraper $scraper,
         private BricksProvider $bricksProvider,
-        private BrickRepository $BrickRepository,
+        private BrickRepository $brickRepository,
         private QuantityRepository $quantityRepository,
     )
     {}
 
-    public function transformDataForTwig($request, $form): array{
-        $form->handleRequest($request);
+    public function transformDataForTwig($request, $sortBy, $search=''): array{
         $page = $request->query->getInt('page', 0);
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $search = $request->query->all()['minifigures_search']['search'];
-            $sortBy = $request->query->all()['minifigures_search']['sortBy'];
-            $minifigs = $this->minifigureRepository->paginateMinifigures($search,$sortBy, MinifigureRepository::PAGINATOR_PER_PAGE*$page);
-        }else{
-            $minifigs = $this->minifigureRepository->paginateMinifigures('','MinifigureId_ASC', MinifigureRepository::PAGINATOR_PER_PAGE*$page);
-        }
+        $minifigs = $this->minifigureRepository->paginateMinifigures($search,$sortBy, MinifigureRepository::PAGINATOR_PER_PAGE*$page);
         return array('minifigs'=>$minifigs, 'page'=>$page);
     }  
 
-    public function edit($minifigure, $form): array{
-        $bricks = $this->getBricks($minifigure->getId());
-        $unitBrick = $this->BrickRepository->findOneBy(['BrickId' => $form->get('minifigId')->getData().' unitBrick']);
+    public function edit(EntityManagerInterface $entityManagerInterface, Minifigure $minifigure = new RequiredParameter(), Form $form = new RequiredParameter()): void{
+        $bricks = $this->getMinifiguresBricks($minifigure->getId(), $this->quantityRepository);
+        $unitBrick = $this->brickRepository->findOneBy(['BrickId' => $form->get('minifigId')->getData().' unitBrick']);
         $newQuantity = $form->get('quantity')->getData();
         foreach($bricks as $brick){
             $brick->setQuantity($brick->getQuantity()+$newQuantity-$unitBrick->getQuantity());
         }
-        $minifigure->setMinifigId($form->get('minifigId')->getData());
-        $minifigure->setName($form->get('name')->getData());
-        $minifigure->setImagePath($form->get('ImagePath')->getData());
-        $minifigure->setBricklinkSRC($form->get('BricklinkSRC')->getData());
-        $unitBrick->setQuantity($newQuantity);
-        $this->entityManagerInterface->flush();        
-        return [$brick->getQuantity(),$unitBrick];
-    }
-
-    public function getBricks($id): array{
-        $quan = new Quantity;
-        $bricksIds = [];
-        $bricks = $this->quantityRepository->findBy(['MinifigureID' => $id]);
-        foreach($bricks as $brick){
-            $bricksIds[] = $brick->getBrickID();
-        }
-        return $bricksIds;
-    }
-
-    public function delete(string $id): void{
-        $minifigure = $this->minifigureRepository->find($id);
-        $this->entityManagerInterface->remove($minifigure);
-        $this->entityManagerInterface->flush();
+        $entityManagerInterface->flush();        
     }
 
     private function isInDatabase($newMinifigure): Bool{
@@ -84,7 +57,6 @@ class MinifiguresProvider{
         $MinifigureId->setQuantity(
             $MinifigureId->getQuantity()+$form->get('quantity')->getData()
         );
-        $this->entityManagerInterface->flush();
     }
 
     private function getBrick($newMinifig,$brickProperties): Brick{
@@ -105,8 +77,8 @@ class MinifiguresProvider{
         foreach($scrapedBricks as $brickProperties){
             $brick = $this->getBrick($newMinifig, $brickProperties);
             $quan = new Quantity();
-            if($this->bricksProvider->isInDatabase($brick)){
-                $BrickId = $this->BrickRepository->findOneBy(
+            if($this->isBrickInDatabase($brick, $this->brickRepository)){
+                $BrickId = $this->brickRepository->findOneBy(
                     ['BrickId' => $brick->getBrickId(),
                     'Color' => $brick->getColor()]
                     );
@@ -146,6 +118,7 @@ class MinifiguresProvider{
         }else{
             $this->addBrickToMinifig($form->get('minifigId')->getData(), $newMinifigure);
             $this->editMinifiguresQuantity($newMinifigure, $form);
+            $this->entityManagerInterface->flush();
         }
     }
 }

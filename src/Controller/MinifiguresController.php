@@ -28,7 +28,15 @@ class MinifiguresController extends AbstractController
     public function index(Request $request): Response
     {
         $form = $this->createForm(MinifiguresSearchType::class);
-        $transformedData = $this->minifiguresProvider->transformDataForTwig($request, $form);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) { 
+            $search = $request->query->all()['minifigures_search']['search'];
+            $sortBy = $request->query->all()['minifigures_search']['sortBy'];
+        }else{
+            $search = '';
+            $sortBy = 'MinifigureId_ASC';
+        }
+        $transformedData = $this->minifiguresProvider->transformDataForTwig($request, $sortBy, $search);
         return $this->render('minifigures/minifigures.html.twig', [
             'Minifigs' => $transformedData['minifigs'],
             'form' => $form,
@@ -56,7 +64,7 @@ class MinifiguresController extends AbstractController
     #[Route('/minifigure/delete/{id}', name: 'delete_minifigure')]
     public function delete($id): Response
     {
-        $this->minifiguressProvider->delete($id);
+        $this->minifiguresProvider->delete($id, $this->minifigureReposytory, $this->entityManagerInterface);
         return $this->redirectToRoute('minifigures');
     }
 
@@ -68,15 +76,15 @@ class MinifiguresController extends AbstractController
         $form->handleRequest($request);  
         $test = [];
         if ($form->isSubmitted() and $form->isValid()) {
-            $test = $this->minifiguresProvider->edit($minifigure, $form);
+            $test = $this->minifiguresProvider->edit($this->entityManagerInterface, $minifigure, $form);
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
         }
         return $this->render('minifigures/editMinifigure.html.twig', [
             'minifigure' => $minifigure,
             'form' => $form,
-            'Bricks' => $this->minifiguresProvider->getBricks($id),
-            'test' => $this->minifiguresProvider->edit($minifigure, $form),
+            'Bricks' => $this->minifiguresProvider->getMinifiguresBricks($id, $this->minifigureReposytory),
+            'test' => $this->minifiguresProvider->edit($this->entityManagerInterface ,$minifigure, $form),
         ]);
     }
 }
