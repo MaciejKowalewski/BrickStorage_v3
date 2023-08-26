@@ -43,6 +43,29 @@ class MinifiguresProvider extends AbstractProvider{
         $entityManagerInterface->flush();        
     }
 
+    public function add($form): void{
+        $newMinifigure = $form->getData();
+        if(!$this->isInDatabase($newMinifigure)){
+            $this->entityManagerInterface->persist($newMinifigure);
+            $this->addBrickToMinifig($form->get('minifigId')->getData(), $newMinifigure);
+            $this->entityManagerInterface->flush();
+        }else{
+            $this->editMinifiguresQuantity($newMinifigure, $form);
+            $this->addBrickToMinifig($form->get('minifigId')->getData(), $newMinifigure);
+            $this->entityManagerInterface->flush();
+        }
+    }
+    
+    public function delete(string $id, $repository, $entityManagerInterface): void{
+        $entity = $repository->find($id);
+        $quantities = $this->quantityRepository->findBy(['MinifigureID'=>$id]);
+        foreach($quantities as $quantity){
+            $entityManagerInterface->remove($quantity);
+        }
+        $entityManagerInterface->remove($entity);
+        $entityManagerInterface->flush();
+    }
+
     private function isInDatabase($newMinifigure): Bool{
         $isMinifigure = $this->minifigureRepository->findBy(
             ['minifigId' => $newMinifigure->getMinifigId()]
@@ -93,6 +116,13 @@ class MinifiguresProvider extends AbstractProvider{
             $quan->setMinifigureID($newMinifig);
             $this->entityManagerInterface->persist($quan);
         }
+        $unitBrick = $this->createUnitBrick($newMinifig);
+        $quan->setMinifigureID($newMinifig);
+        $this->entityManagerInterface->persist($quan);
+        $this->entityManagerInterface->persist($unitBrick);
+    }
+
+    private function createUnitBrick($newMinifig): Brick{
         $unitBrick = new Brick();
         $unitBrick->setBrickId($newMinifig->getMinifigId().' unitBrick');
         $unitBrick->setName('unitBrick');
@@ -104,21 +134,6 @@ class MinifiguresProvider extends AbstractProvider{
         $quan = new Quantity();
         $quan->setQuantity(1);
         $quan->setBrickID($unitBrick);
-        $quan->setMinifigureID($newMinifig);
-        $this->entityManagerInterface->persist($quan);
-        $this->entityManagerInterface->persist($unitBrick);
-    }
-
-    public function add($form): void{
-        $newMinifigure = $form->getData();
-        if(!$this->isInDatabase($newMinifigure)){
-            $this->entityManagerInterface->persist($newMinifigure);
-            $this->addBrickToMinifig($form->get('minifigId')->getData(), $newMinifigure);
-            $this->entityManagerInterface->flush();
-        }else{
-            $this->addBrickToMinifig($form->get('minifigId')->getData(), $newMinifigure);
-            $this->editMinifiguresQuantity($newMinifigure, $form);
-            $this->entityManagerInterface->flush();
-        }
+        return $unitBrick;
     }
 }

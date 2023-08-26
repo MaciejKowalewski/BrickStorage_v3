@@ -30,10 +30,11 @@ class WishController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $search = $request->query->all()['wishlist_paginator']['search'];
             $sortBy = $request->query->all()['wishlist_paginator']['sortBy'];
-            $transformedData = $this->wishlistProvider->transformDataForTwig($request, $sortBy,  $search);
         }else{
-            $transformedData = $this->wishlistProvider->transformDataForTwig($request, 'SetId_ASC');
+            $search = '';
+            $sortBy = 'SetId_ASC';
         }
+        $transformedData = $this->wishlistProvider->transformDataForTwig($request, $sortBy,  $search);
         return $this->render('wish/wishlist.html.twig', [
             'Wishlist' => $transformedData['wishlist'],
             'form' => $form->createView(),

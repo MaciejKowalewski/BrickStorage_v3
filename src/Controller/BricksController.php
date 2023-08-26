@@ -30,10 +30,11 @@ class BricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) { 
             $search = $request->query->all()['bricks_search']['search'];
             $sortBy = $request->query->all()['bricks_search']['sortBy'];
-            $transformedData = $this->bricksProvider->transformDataForTwig($request, $sortBy, $search);
         }else{
-            $transformedData = $this->bricksProvider->transformDataForTwig($request, 'BrickId_ASC');
+            $search = '';
+            $sortBy = 'BrickId_ASC';
         }
+        $transformedData = $this->bricksProvider->transformDataForTwig($request, $sortBy, $search);
         return $this->render('bricks/bricks.html.twig', [
             'Bricks' => $transformedData['bricks'],
             'form' => $form->createView(),

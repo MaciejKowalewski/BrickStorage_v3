@@ -6,6 +6,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Brick;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\QuantityRepository;
 
 abstract class AbstractProvider{
 
@@ -37,7 +38,7 @@ abstract class AbstractProvider{
         return !empty($brickFromDB);
     }
 
-    public function getMinifiguresBricks(string $id, $repository): array{
+    public function getMinifiguresBricks(string $id, QuantityRepository $repository): array{
         $bricksIds = [];
         $bricks = $repository->findBy(['MinifigureID' => $id]);
         foreach($bricks as $brick){

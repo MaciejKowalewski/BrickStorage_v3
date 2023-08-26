@@ -74,16 +74,6 @@ class AppFixtures extends Fixture
         $brick6->setPartType('brick');
         $manager->persist($brick6);
 
-        $brick7 = new Brick();
-        $brick7->setBrickId('970c00');
-        $brick7->setName('Hips and Legs Plain');
-        $brick7->setQuantity(5123);
-        $brick7->setBrickLinkSRC('https://www.bricklink.com/v2/catalog/catalogitem.page?P=970c00&C=85#T=S&C=85&O={"color":"85","rpp":"500","iconly":0}');
-        $brick7->setImagePath('https://img.bricklink.com/ItemImage/PN/85/970c00.png');
-        $brick7->setColor('Dark Bluish Gray');
-        $brick7->setPartType('brick');
-        $manager->persist($brick7);
-
         $brick9 = new Brick();
         $brick9->setBrickId(50943);
         $brick9->setName('Vehicle, Air Scoop Engine Top 2 x 2');

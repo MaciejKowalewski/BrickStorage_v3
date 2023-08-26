@@ -13,14 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Minifigure;
 use App\Service\Scraper;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\QuantityRepository;
 
 class MinifiguresController extends AbstractController
 {
     public function __construct(
-        private MinifigureRepository $minifigureReposytory,
+        private MinifigureRepository $minifigureRepository,
         private MinifiguresProvider $minifiguresProvider,
         private Scraper $scraper,
         private EntityManagerInterface $entityManagerInterface,
+        private QuantityRepository $quantityRepository,
     )
     {}
 
@@ -51,40 +53,37 @@ class MinifiguresController extends AbstractController
         $minifig = new Minifigure;
         $form = $this->createForm(AddMinifigureType::class, $minifig);
         $form->handleRequest($request);  
-
          if ($form->isSubmitted() and $form->isValid()) {
             $this->minifiguresProvider->add($form);
             return $this->redirectToRoute('minifigures');
          }
         return $this->render('minifigures/addMinifig.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/minifigure/delete/{id}', name: 'delete_minifigure')]
     public function delete($id): Response
     {
-        $this->minifiguresProvider->delete($id, $this->minifigureReposytory, $this->entityManagerInterface);
+        $this->minifiguresProvider->delete($id, $this->minifigureRepository, $this->entityManagerInterface);
         return $this->redirectToRoute('minifigures');
     }
 
     #[Route('/minifigure/{id}', name: 'edit_minifigure')]
     public function edit($id,Request $request): Response
     {
-        $minifigure = $this->minifigureReposytory->find($id);
+        $minifigure = $this->minifigureRepository->find($id);
         $form = $this->createForm(AddMinifigureType::class, $minifigure);
         $form->handleRequest($request);  
-        $test = [];
         if ($form->isSubmitted() and $form->isValid()) {
-            $test = $this->minifiguresProvider->edit($this->entityManagerInterface, $minifigure, $form);
+            $this->minifiguresProvider->edit($this->entityManagerInterface, $minifigure, $form);
             $routeName = $request->attributes->get('_route');
             return $this->redirectToRoute($routeName, ['id'=>$id]);
         }
         return $this->render('minifigures/editMinifigure.html.twig', [
             'minifigure' => $minifigure,
             'form' => $form,
-            'Bricks' => $this->minifiguresProvider->getMinifiguresBricks($id, $this->minifigureReposytory),
-            'test' => $this->minifiguresProvider->edit($this->entityManagerInterface ,$minifigure, $form),
+            'Bricks' => $this->minifiguresProvider->getMinifiguresBricks($id, $this->quantityRepository),
         ]);
     }
 }
